@@ -4,6 +4,9 @@
   "description": "Telegram AI bot",
   "main": "index.js",
   "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "axios": "^1.6.7",
     "node-telegram-bot-api": "^0.61.0"
