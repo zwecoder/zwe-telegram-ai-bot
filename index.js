@@ -1,33 +1,30 @@
 import TelegramBot from "node-telegram-bot-api";
 import axios from "axios";
 
-const token = process.env.BOT_TOKEN;
-const HF_TOKEN = process.env.HF_TOKEN;
-
-const bot = new TelegramBot(token, { polling: true });
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
 
 bot.on("message", async (msg) => {
-  if (!msg.text) return;
-
   const chatId = msg.chat.id;
+  const text = msg.text;
+
+  if (!text) return;
+
+  bot.sendMessage(chatId, "🤖 thinking...");
 
   try {
     const res = await axios.post(
       "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-7B-Instruct",
-      {
-        inputs: msg.text
-      },
+      { inputs: text },
       {
         headers: {
-          Authorization: `Bearer ${HF_TOKEN}`
-        }
+          Authorization: `Bearer ${process.env.HF_TOKEN}`,
+        },
       }
     );
 
-    const reply = res.data[0]?.generated_text || "No response";
+    const reply = res.data[0].generated_text;
     bot.sendMessage(chatId, reply);
-
   } catch (e) {
-    bot.sendMessage(chatId, "AI error 😢");
+    bot.sendMessage(chatId, "AI error ❌");
   }
 });
