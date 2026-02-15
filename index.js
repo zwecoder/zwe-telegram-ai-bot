@@ -10,7 +10,7 @@ bot.on("message", async (msg) => {
   const text = msg.text;
 
   const response = await axios.post(
-    "https://api-inference.huggingface.co/models/Qwen/Qwen2-7B-Instruct",
+    "https://router.huggingface.co/hf-inference/models/Qwen/Qwen2-7B-Instruct",
     { inputs: text },
     { headers: { Authorization: `Bearer ${process.env.HF_API_KEY}` } }
   );
