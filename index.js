@@ -1,4 +1,4 @@
-console.log("HF:", process.env.HF_API_KEY);
+console.log("HF:", process.env.OPENAI_API_KEY);
 console.log("TG:", process.env.TELEGRAM_TOKEN);
 import TelegramBot from "node-telegram-bot-api";
 import axios from "axios";
