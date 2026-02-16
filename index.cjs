@@ -1,18 +1,23 @@
-import { Telegraf } from "telegraf";
-import fetch from "node-fetch"; // Node 18+ built-in fetch ကိုသုံးလည်းရပါတယ်
+// const fs = require('fs');
+// console.log(".env exists:", fs.existsSync('./.env'));
+// require('dotenv').config();
+const { Telegraf } = require("telegraf");
+const fetch = require("node-fetch"); // Node < 18 only
 
-// ===== Read tokens from environment variables =====
-const API_KEY = process.env.GROQ_API_KEY;
+// Read from environment
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const API_KEY = process.env.GROQ_API_KEY;
 const BASE_URL = "https://api.groq.com/openai/v1";
+console.log("BOT TOKEN:", BOT_TOKEN ? "✅ Loaded" : "❌ Missing");
+console.log("GROQ KEY:", API_KEY ? "✅ Loaded" : "❌ Missing");
 
-// ===== Bot setup =====
 const bot = new Telegraf(BOT_TOKEN);
 
-// ===== User conversation memory =====
+// rest of your bot code ...
+
+
 const userConversations = {};
 
-// ===== Helpers =====
 async function askGroqAI(userId, message) {
   const history = userConversations[userId] || [];
   history.push({ role: "user", content: message });
@@ -45,19 +50,19 @@ async function askGroqAI(userId, message) {
   return aiText;
 }
 
-// ===== Bot commands =====
-bot.start((ctx) => ctx.reply("Hi! This is a multi-turn AI bot.\nSend me any message."));
+bot.start((ctx) => ctx.reply("Hi! This is a multi-turn AI bot."));
 bot.command("clear", (ctx) => {
   userConversations[ctx.from.id] = [];
-  ctx.reply("✅ Your conversation history has been cleared.");
+  ctx.reply("✅ Conversation cleared.");
 });
 bot.on("text", async (ctx) => {
   const userMessage = ctx.message.text;
   const userId = ctx.from.id;
+
   await ctx.sendChatAction("typing");
   const aiReply = await askGroqAI(userId, userMessage);
   ctx.reply(aiReply);
 });
 
 bot.launch();
-console.log("✅ Telegram multi-turn Groq AI bot running...");
+console.log("✅ Bot running...");
