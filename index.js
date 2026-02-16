@@ -12,9 +12,9 @@ bot.on("message", async (msg) => {
     const text = msg.text;
 
     const res = await axios.post(
-      "https://api.openai.com/v1/chat/completions",
+      "https://api.groq.com/openai/v1",
       {
-        model: "gpt-4o-mini",
+        model: "openai/gpt-oss-20b",
         messages: [{ role: "user", content: text }]
       },
       {
